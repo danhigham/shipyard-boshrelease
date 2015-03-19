@@ -75,10 +75,8 @@ jobs:
   - name: shipyard
     templates:
       - name: docker
+      - name: shipyard_db_vol
       - name: shipyard_db
-      - name: shipyard_redis
-      - name: shipyard_router
-      - name: shipyard_lb
       - name: shipyard
     instances: 1
     resource_pool: shipyard
