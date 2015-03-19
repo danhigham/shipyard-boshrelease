@@ -1,7 +1,7 @@
-<% director_uuid = 'CHANGE-ME' %>
+<% director_uuid = 'cf2ca939-4344-4f17-9e6b-f6c7b69e26b5' %>
 <% deployment_name = 'shipyard' %>
-<% elastic_ip = 'CHANGE-ME' %>
-<% tld = 'microbosh' %>
+<% elastic_ip = '54.153.123.77' %>
+<% tld = 'cloud.high.am' %>
 <% num_nodes = 5 %>
 ---
 name: <%= deployment_name %>
@@ -13,7 +13,7 @@ releases:
 
 compilation:
   workers: 1
-  network: default
+  network: cf-vpc
   reuse_compilation_vms: true
   cloud_properties:
     instance_type: m1.xlarge
@@ -26,12 +26,27 @@ update:
   serial: false
 
 networks:
+  - name: cf-vpc
+    type: manual
+    subnets:
+    - cloud_properties:
+        security_groups:
+        - bosh-vpc-4ff33f2a
+        - <%= deployment_name %>
+        - ssh
+        subnet: subnet-dc7e9b85
+      gateway: 10.10.1.1
+      range: 10.10.1.0/24
+      reserved:
+      - 10.10.1.2 - 10.10.1.9
+
   - name: default
     type: dynamic
     cloud_properties:
       security_groups:
-        - bosh
+        - bosh-vpc-4ff33f2a
         - <%= deployment_name %>
+        - ssh
 
   - name: elastic
     type: vip
@@ -42,7 +57,7 @@ resource_pools:
     network: default
     size: 1
     stemcell:
-      name: bosh-aws-xen-ubuntu
+      name: bosh-aws-xen-ubuntu-trusty-go_agent
       version: latest
     cloud_properties:
       instance_type: m1.xlarge
@@ -51,7 +66,7 @@ resource_pools:
     network: default
     size: <%= num_nodes %>
     stemcell:
-      name: bosh-aws-xen-ubuntu
+      name: bosh-aws-xen-ubuntu-trusty-go_agent
       version: latest
     cloud_properties:
       instance_type: m1.xlarge
@@ -69,7 +84,7 @@ jobs:
     resource_pool: shipyard
     persistent_disk: 65536
     networks:
-      - name: default
+      - name: cf-vpc
         default: [dns, gateway]
       - name: elastic
         static_ips:
@@ -82,7 +97,7 @@ jobs:
     instances: <%= num_nodes %>
     resource_pool: nodes
     networks:
-      - name: default
+      - name: cf-vpc
         default: [dns, gateway]
 
 properties:
