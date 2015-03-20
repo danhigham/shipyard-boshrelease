@@ -25,8 +25,8 @@ case $1 in
     create_user ${DOCKER_USER} ${DOCKER_GROUP}
 
     # Stop and remove previously Shipyard DB Container
-    chpst -u ${DOCKER_USER}:${DOCKER_GROUP} docker -H unix:///var/vcap/sys/run/docker/docker.sock stop shipyard_db_vol || true
-    chpst -u ${DOCKER_USER}:${DOCKER_GROUP} docker -H unix:///var/vcap/sys/run/docker/docker.sock rm shipyard_db_vol || true
+    chpst -u ${DOCKER_USER}:${DOCKER_GROUP} docker -H unix:///var/vcap/sys/run/docker/docker_db_vol_docker.sock stop shipyard_db_vol || true
+    chpst -u ${DOCKER_USER}:${DOCKER_GROUP} docker -H unix:///var/vcap/sys/run/docker/docker_db_vol_docker.sock rm shipyard_db_vol || true
     rm ${SHIPYARD_DB_VOL_ID_FILE} || true
 
     # Create Shipyard DB persistent disk path
@@ -36,7 +36,7 @@ case $1 in
         chmod 777 ${SHIPYARD_DB_VOL_STORE_DIR}/shipyard_db_vol
     fi
 
-    docker_command="docker --host unix:///var/vcap/sys/run/docker/docker.sock \
+    docker_command="docker --host unix:///var/vcap/sys/run/docker/docker_db_vol_docker.sock \
             run --detach \
             --name shipyard_db_vol \
             --cidfile ${SHIPYARD_DB_VOL_ID_FILE} \
@@ -49,14 +49,14 @@ case $1 in
 
     # Grab Shipyard DB Container process pid
     container_id=$(cat ${SHIPYARD_DB_VOL_ID_FILE})
-    pid_process=$(chpst -u ${DOCKER_USER}:${DOCKER_GROUP} docker -H unix:///var/vcap/sys/run/docker/docker.sock inspect $container_id | grep Pid | awk '{ gsub(",", ""); print $2 }')
+    pid_process=$(chpst -u ${DOCKER_USER}:${DOCKER_GROUP} docker -H unix:///var/vcap/sys/run/docker/docker_db_vol_docker.sock inspect $container_id | grep Pid | awk '{ gsub(",", ""); print $2 }')
     echo ${pid_process} > ${SHIPYARD_DB_VOL_PID_FILE}
     ;;
 
   stop)
     # Stop and remove Shipyard DB Container
-    chpst -u ${DOCKER_USER}:${DOCKER_GROUP} docker -H unix:///var/vcap/sys/run/docker/docker.sock stop shipyard_db_vol || true
-    chpst -u ${DOCKER_USER}:${DOCKER_GROUP} docker -H unix:///var/vcap/sys/run/docker/docker.sock rm shipyard_db_vol || true
+    chpst -u ${DOCKER_USER}:${DOCKER_GROUP} docker -H unix:///var/vcap/sys/run/docker/docker_db_vol_docker.sock stop shipyard_db_vol || true
+    chpst -u ${DOCKER_USER}:${DOCKER_GROUP} docker -H unix:///var/vcap/sys/run/docker/docker_db_vol_docker.sock rm shipyard_db_vol || true
     rm ${SHIPYARD_DB_VOL_ID_FILE} || true
     ;;
 

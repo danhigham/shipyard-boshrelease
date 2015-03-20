@@ -1,4 +1,4 @@
-check process shipyard_db with pidfile /var/vcap/sys/run/shipyard_db/shipyard_db_vol.pid
+check process shipyard_db_vol with pidfile /var/vcap/sys/run/shipyard_db/shipyard_db_vol.pid
   group vcap
   start program "/var/vcap/packages/bosh-helpers/monit_debugger shipyard_db_vol_ctl '/var/vcap/jobs/shipyard_db/bin/shipyard_db_vol_ctl start'"
   stop program "/var/vcap/packages/bosh-helpers/monit_debugger shipyard_db_vol_ctl '/var/vcap/jobs/shipyard_db/bin/shipyard_db_vol_ctl stop'"
