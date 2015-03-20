@@ -1,5 +1,5 @@
 ---
-name: shipyard_db
+name: shipyard_db_vol
 
 packages:
   - bosh-helpers
@@ -7,7 +7,7 @@ packages:
 
 templates:
   bin/job_properties.sh.erb: bin/job_properties.sh
-  bin/shipyard_db_ctl: bin/shipyard_db_ctl
+  bin/shipyard_db_vol_ctl: bin/shipyard_db_vol_ctl
 
 properties:
   docker.user:
