@@ -91,12 +91,14 @@ jobs:
   - name: node
     templates:
       - name: docker
-      - name: shipyardagent
     instances: <%= num_nodes %>
     resource_pool: nodes
     networks:
       - name: cf-vpc
         default: [dns, gateway]
+    properties:
+      docker:
+        tcp_address: 0.0.0.0
 
 properties:
   shipyard:
