@@ -2,4 +2,4 @@ check process shipyard_db with pidfile /var/vcap/sys/run/shipyard_db/shipyard_db
   group vcap
   start program "/var/vcap/packages/bosh-helpers/monit_debugger shipyard_db_ctl '/var/vcap/jobs/shipyard_db/bin/shipyard_db_ctl start'"
   stop program "/var/vcap/packages/bosh-helpers/monit_debugger shipyard_db_ctl '/var/vcap/jobs/shipyard_db/bin/shipyard_db_ctl stop'"
-  depends on docker
+  depends on docker, shipyard_db_vol
