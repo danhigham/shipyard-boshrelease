@@ -29,8 +29,10 @@ case $1 in
     chpst -u ${DOCKER_USER}:${DOCKER_GROUP} docker -H unix:///var/vcap/sys/run/docker/docker.sock rm shipyard_db || true
     rm ${SHIPYARD_DB_ID_FILE} || true
 
+    # /var/vcap/packages/docker/bin/docker --host unix:///var/vcap/sys/run/docker/docker.sock run -it -P -d --name shipyard-rethinkdb --volumes-from shipyard-rethinkdb-data shipyard/rethinkdb
+
     docker_command="docker --host unix:///var/vcap/sys/run/docker/docker.sock \
-           run --detach \
+           run -it -P -d \
            --name shipyard_db \
            --cidfile ${SHIPYARD_DB_ID_FILE} \
            --volumes-from shipyard_db_vol shipyard/rethinkdb"

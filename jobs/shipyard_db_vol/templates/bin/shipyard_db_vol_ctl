@@ -29,15 +29,10 @@ case $1 in
     chpst -u ${DOCKER_USER}:${DOCKER_GROUP} docker -H unix:///var/vcap/sys/run/docker/docker.sock rm shipyard_db_vol || true
     rm ${SHIPYARD_DB_VOL_ID_FILE} || true
 
-    # Create Shipyard DB persistent disk path
-    if [ ! -d ${SHIPYARD_DB_VOL_STORE_DIR}/shipyard_db_vol ]; then
-        mkdir -p ${SHIPYARD_DB_VOL_STORE_DIR}/shipyard_db_vol
-        chown ${DOCKER_USER}:${DOCKER_GROUP} ${SHIPYARD_DB_VOL_STORE_DIR}/shipyard_db_vol
-        chmod 777 ${SHIPYARD_DB_VOL_STORE_DIR}/shipyard_db_vol
-    fi
+    # /var/vcap/packages/docker/bin/docker --host unix:///var/vcap/sys/run/docker/docker.sock run -it -d --name shipyard-rethinkdb-data --entrypoint /bin/bash shipyard/rethinkdb -l
 
     docker_command="docker --host unix:///var/vcap/sys/run/docker/docker.sock \
-            run --detach \
+            run -it -d
             --name shipyard_db_vol \
             --cidfile ${SHIPYARD_DB_VOL_ID_FILE} \
             --entrypoint /bin/bash shipyard/rethinkdb -l"

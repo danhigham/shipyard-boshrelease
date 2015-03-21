@@ -29,11 +29,13 @@ case $1 in
     chpst -u ${DOCKER_USER}:${DOCKER_GROUP} docker -H unix:///var/vcap/sys/run/docker/docker.sock rm shipyard || true
     rm ${SHIPYARD_ID_FILE} || true
 
+    # /var/vcap/packages/docker/bin/docker --host unix:///var/vcap/sys/run/docker/docker.sock run -it -p 8080:8080 -d --name shipyard     --link shipyard-rethinkdb:rethinkdb shipyard/shipyard
+
     docker_command="docker --host unix:///var/vcap/sys/run/docker/docker.sock \
-           run --detach \
+           run -it -d \
            --name shipyard \
+           -p ${SHIPYARD_PORT}:8000 \
            --cidfile ${SHIPYARD_ID_FILE} \
-           --publish ${SHIPYARD_PORT}:8000 \
            --link shipyard_db:rethinkdb shipyard/shipyard"
 
     echo "$(date) Running command: ${docker_command}"
