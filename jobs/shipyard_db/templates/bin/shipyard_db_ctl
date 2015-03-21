@@ -29,13 +29,6 @@ case $1 in
     chpst -u ${DOCKER_USER}:${DOCKER_GROUP} docker -H unix:///var/vcap/sys/run/docker/docker.sock rm shipyard_db || true
     rm ${SHIPYARD_DB_ID_FILE} || true
 
-    # Create Shipyard DB persistent disk path
-    if [ ! -d ${SHIPYARD_DB_STORE_DIR}/shipyard_db ]; then
-        mkdir -p ${SHIPYARD_DB_STORE_DIR}/shipyard_db
-        chown ${DOCKER_USER}:${DOCKER_GROUP} ${SHIPYARD_DB_STORE_DIR}/shipyard_db
-        chmod 777 ${SHIPYARD_DB_STORE_DIR}/shipyard_db
-    fi
-
     docker_command="docker --host unix:///var/vcap/sys/run/docker/docker.sock \
            run --detach \
            --name shipyard_db \
