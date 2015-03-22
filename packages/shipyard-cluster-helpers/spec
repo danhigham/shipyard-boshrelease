@@ -1,0 +1,5 @@
+---
+name: shipyard-cluster-helpers
+dependencies: {}
+files:
+  - shipyard-cluster-helpers/*

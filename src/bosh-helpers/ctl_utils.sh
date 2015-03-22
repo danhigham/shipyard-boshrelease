@@ -193,6 +193,17 @@ check_nfs_mount() {
   fi
 }
 
+local_address() {
+  local_address=""
+
+  # AWS EC2
+  if ec2_local_address="$( curl -sSf --connect-timeout 1 http://169.254.169.254/latest/meta-data/local-ipv4 2> /dev/null)"; then
+    local_address=$ec2_local_address
+  fi
+
+  echo $local_address
+}
+
 public_hostname() {
   public_hostname=""
 

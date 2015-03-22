@@ -99,6 +99,8 @@ jobs:
     properties:
       docker:
         tcp_address: 0.0.0.0
+      shipyard:
+        controller_address: http://54.153.41.42:8080
 
 properties:
   shipyard:

@@ -34,7 +34,7 @@ case $1 in
     docker_command="docker --host unix:///var/vcap/sys/run/docker/docker.sock \
            run -it -d \
            --name shipyard \
-           -p ${SHIPYARD_PORT}:8000 \
+           -p ${SHIPYARD_PORT}:8080 \
            --cidfile ${SHIPYARD_ID_FILE} \
            --link shipyard_db:rethinkdb shipyard/shipyard"
 

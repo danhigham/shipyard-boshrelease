@@ -25,6 +25,10 @@ export DOCKER_USER="<%= p('docker.user') %>"
 # Group which will own the Docker services
 export DOCKER_GROUP="<%= p('docker.group') %>"
 
+export DOCKER_PORT="<%= p('docker.tcp_port') %>"
+
+export SHIPYARD_CONTROLLER="<%= p('shipyard.controller_address') %>"
+
 <% if_p('docker.tcp_address', 'docker.tcp_port') do |address, port| %>
 # TCP Address/Port where Docker daemon will listen to
 export DOCKER_TCP="--host tcp://<%= address %>:<%= port %>"
