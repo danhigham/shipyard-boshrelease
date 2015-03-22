@@ -70,6 +70,8 @@ resource_pools:
       version: latest
     cloud_properties:
       instance_type: m1.xlarge
+update:
+  serial: true
 
 jobs:
   - name: shipyard
