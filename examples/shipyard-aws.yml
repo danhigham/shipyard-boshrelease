@@ -2,7 +2,7 @@
 <% deployment_name = 'shipyard' %>
 <% elastic_ip = '54.67.60.255' %>
 <% tld = 'cloud.high.am' %>
-<% num_nodes = 0 %>
+<% num_nodes = 2 %>
 ---
 name: <%= deployment_name %>
 director_uuid: <%= director_uuid %>
@@ -70,8 +70,6 @@ resource_pools:
       version: latest
     cloud_properties:
       instance_type: m1.xlarge
-update:
-  serial: true
 
 jobs:
   - name: shipyard
@@ -89,6 +87,8 @@ jobs:
       - name: elastic
         static_ips:
           - <%= elastic_ip %>
+    update:
+      serial: true
 
   - name: node
     templates:
