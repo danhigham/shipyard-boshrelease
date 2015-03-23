@@ -55,12 +55,13 @@ case $1 in
         ${DOCKER_MTU:-} \
         >>${DOCKER_LOG_DIR}/${OUTPUT_LABEL}.stdout.log \
         2>>${DOCKER_LOG_DIR}/${OUTPUT_LABEL}.stderr.log
-    ;;
 
     if [ "$DOCKER_TCP" != "--host tcp://127.0.0.1:4243" ]; then
       engine_addr=$(local_address)
-      register_node ${SHIPYARD_CONTROLLER} http://${engine_addr}:${DOCKER_PORT} 4 8192 NEW_NODE
+      id=$(ec2_instance_id)
+      register_node ${SHIPYARD_CONTROLLER} http://${engine_addr}:${DOCKER_PORT} 4 8192 ${id}
     fi
+    ;;
 
   stop)
     # Stop Docker daemon

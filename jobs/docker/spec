@@ -3,6 +3,7 @@ name: docker
 
 packages:
   - bosh-helpers
+  - shipyard-cluster-helpers
   - docker
 
 templates:

@@ -9,7 +9,7 @@
 #
 # Example usage:
 
-register_node http://10.10.1.10:8080 http://10.1.2.3:2375 4 8192 NEW_NODE
+# register_node http://10.10.1.10:8080 http://10.1.2.3:2375 4 8192 NEW_NODE
 
 register_node() {
 
@@ -23,20 +23,21 @@ register_node() {
   MEM=$4
   ID=$5
 
+  echo "Registering with controller"
+
   # 1. login to controller and gain auth_token
   AUTH="$(curl -s -H "Content-Type: application/json" -d '{ "username": "admin", "password": "shipyard" }' \
-    -XPOST $ADDR/auth/login | python -c 'import sys, json; print json.load(sys.stdin)["auth_token"]')"
-
-  echo $AUTH
+    -XPOST $ADDR/auth/login | /var/vcap/bosh/bin/ruby -e "require 'json'; puts JSON.parse(ARGF.read)['auth_token']")"
+  echo "AUTH: $AUTH"
 
   # 2. request service token
   TOKEN="$(curl -s -H "Content-Type: application/json" -H "X-Access-Token: admin:$AUTH" \
-    -d '{}' -XPOST $ADDR/api/servicekeys | python -c 'import sys, json; print json.load(sys.stdin)["key"]')"
+    -d '{}' -XPOST $ADDR/api/servicekeys | /var/vcap/bosh/bin/ruby -e "require 'json'; puts JSON.parse(ARGF.read)['key']")"
+  echo $TOKEN
 
   #3. Register the node
   RET="$(curl -s -H "X-Service-Key: $TOKEN" \
-    -d '{ "id": "local", "ssl_cert": "", "ssl_key": "", "ca_cert": "", "engine": { "id": "local", "addr": "$ENGINE_ADDR", "cpus": 4.0, "memory": 8192, "labels": ["local", "dev"] } }' \
+    -d "{ \"id\": \"local\", \"ssl_cert\": \"\", \"ssl_key\": \"\", \"ca_cert\": \"\", \"engine\": { \"id\": \"$ID\", \"addr\": \"$ENGINE_ADDR\", \"cpus\": 4.0, \"memory\": 8192, \"labels\": [\"local\", \"dev\"] } }\"" \
     -XPOST $ADDR/api/engines)"
-
-  echo $TOKEN
+  echo $RET
 }

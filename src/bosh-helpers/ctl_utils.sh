@@ -193,6 +193,17 @@ check_nfs_mount() {
   fi
 }
 
+ec2_instance_id() {
+  instance_id=""
+
+  # AWS EC2
+  if id="$( curl -sSf --connect-timeout 1 http://169.254.169.254/latest/meta-data/instance-id 2> /dev/null)"; then
+    instance_id=$id
+  fi
+
+  echo $instance_id
+}
+
 local_address() {
   local_address=""
 
