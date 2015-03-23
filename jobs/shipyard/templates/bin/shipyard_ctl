@@ -31,6 +31,8 @@ case $1 in
 
     # /var/vcap/packages/docker/bin/docker --host unix:///var/vcap/sys/run/docker/docker.sock run -it -p 8080:8080 -d --name shipyard     --link shipyard-rethinkdb:rethinkdb shipyard/shipyard
 
+    chpst -u ${DOCKER_USER}:${DOCKER_GROUP} docker --host unix:///var/vcap/sys/run/docker/docker.sock pull shipyard/shipyard
+
     docker_command="docker --host unix:///var/vcap/sys/run/docker/docker.sock \
            run -it -d \
            --name shipyard \
