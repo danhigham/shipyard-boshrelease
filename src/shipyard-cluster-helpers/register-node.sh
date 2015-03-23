@@ -36,8 +36,8 @@ register_node() {
   echo $TOKEN
 
   #3. Register the node
-  RET="$(curl -s -H "X-Service-Key: $TOKEN" \
-    -d "{ \"id\": \"local\", \"ssl_cert\": \"\", \"ssl_key\": \"\", \"ca_cert\": \"\", \"engine\": { \"id\": \"$ID\", \"addr\": \"$ENGINE_ADDR\", \"cpus\": 4.0, \"memory\": 8192, \"labels\": [\"local\", \"dev\"] } }\"" \
+  RET="$(curl -i -H "X-Service-Key: $TOKEN" \
+    -d "{\"engine\":{\"id\":\"$ID\",\"addr\":\"$ENGINE_ADDR\",\"cpus\":4,\"memory\":8192,\"labels\":[\"local\", \"dev\"]}}" \
     -XPOST $ADDR/api/engines)"
   echo $RET
 }
