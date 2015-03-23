@@ -54,7 +54,7 @@ case $1 in
         ${DOCKER_DNS_DOMAINS:-} \
         ${DOCKER_MTU:-} \
         >>${DOCKER_LOG_DIR}/${OUTPUT_LABEL}.stdout.log \
-        2>>${DOCKER_LOG_DIR}/${OUTPUT_LABEL}.stderr.log
+        2>>${DOCKER_LOG_DIR}/${OUTPUT_LABEL}.stderr.log &
 
     if [ "$DOCKER_TCP" != "--host tcp://127.0.0.1:4243" ]; then
       engine_addr=$(local_address)
