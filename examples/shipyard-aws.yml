@@ -93,6 +93,7 @@ jobs:
   - name: node
     templates:
       - name: docker
+      - name: register_engine
     instances: <%= num_nodes %>
     resource_pool: nodes
     networks:
