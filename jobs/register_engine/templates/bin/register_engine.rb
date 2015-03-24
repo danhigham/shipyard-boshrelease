@@ -2,11 +2,11 @@
 require 'net/http'
 require 'json'
 
-@sy_schema = ENV['SHIPYARD_SCHEMA']
+@sy_scheme = ENV['SHIPYARD_SCHEME']
 @sy_port = ENV['SHIPYARD_PORT']
 @sy_host = ENV['SHIPYARD_HOST']
 
-@sy_controller = "#{@sy_schema}://#{@sy_host}:#{@sy_port}"
+@sy_controller = "#{@sy_scheme}://#{@sy_host}:#{@sy_port}"
 
 def instance_id()
   uri = URI("http://169.254.169.254/latest/meta-data/instance-id")
