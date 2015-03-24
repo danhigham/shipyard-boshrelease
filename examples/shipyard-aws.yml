@@ -2,7 +2,7 @@
 <% deployment_name = 'shipyard' %>
 <% elastic_ip = '54.67.60.255' %>
 <% tld = 'cloud.high.am' %>
-<% num_nodes = 2 %>
+<% num_nodes = 3 %>
 ---
 name: <%= deployment_name %>
 director_uuid: <%= director_uuid %>
@@ -105,7 +105,8 @@ jobs:
 properties:
   shipyard:
     port: 8080
-    controller_address: http://54.153.41.42:8080
+    host: 54.153.41.42
+    scheme: http
 
     host: 0.shipyard.default.<%= deployment_name %>.<%= tld %>
     db:

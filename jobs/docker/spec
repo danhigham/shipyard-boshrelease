@@ -48,5 +48,9 @@ properties:
     description: 'Array of DNS search domains to be used by Docker'
   docker.mtu:
     description: 'Docker Containers network MTU'
-  shipyard.controller_address:
-    description: 'Address of shipyard controller to attach to'
+  shipyard.scheme:
+    description: 'Address scheme of shipyard controller to attach to'
+  shipyard.host:
+    description: 'Address host of shipyard controller to attach to'
+  shipyard.port:
+    description: 'Address port of shipyard controller to attach to'

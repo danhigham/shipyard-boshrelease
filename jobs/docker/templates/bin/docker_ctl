@@ -59,6 +59,15 @@ case $1 in
     if [ "$DOCKER_TCP" != "--host tcp://127.0.0.1:4243" ]; then
       engine_addr=$(local_address)
       id=$(ec2_instance_id)
+
+      echo "Waiting shipyard controller to become available..."
+
+      while ! nc -z $SHIPYARD_HOST $SHIPYARD_PORT; do
+        echo "waiting..."
+        
+        sleep 5
+      done
+
       register_node ${SHIPYARD_CONTROLLER} http://${engine_addr}:${DOCKER_PORT} 4 8192 ${id}
     fi
     ;;

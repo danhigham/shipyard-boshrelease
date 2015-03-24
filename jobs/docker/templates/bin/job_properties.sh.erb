@@ -27,7 +27,13 @@ export DOCKER_GROUP="<%= p('docker.group') %>"
 
 export DOCKER_PORT="<%= p('docker.tcp_port') %>"
 
-export SHIPYARD_CONTROLLER="<%= p('shipyard.controller_address') %>"
+export SHIPYARD_PORT="<%= p('shipyard.port') %>"
+
+export SHIPYARD_HOST="<%= p('shipyard.host') %>"
+
+<% if_p('shipyard.scheme', 'shipyard.host', 'shipyard.port') do |scheme, host, port| %>
+export SHIPYARD_CONTROLLER="<%= scheme %>://<%= host %>:<%= port %>"
+<% end %>
 
 <% if_p('docker.tcp_address', 'docker.tcp_port') do |address, port| %>
 # TCP Address/Port where Docker daemon will listen to
