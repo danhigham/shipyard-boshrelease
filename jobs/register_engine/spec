@@ -1,0 +1,25 @@
+---
+name: register_engine
+
+packages:
+  - bosh-helpers
+  - docker
+
+templates:
+  bin/job_properties.sh.erb: bin/job_properties.sh
+  bin/register_engine.rb: bin/register_engine.rb
+
+properties:
+  docker.user:
+    description: 'User which will own the Docker services'
+    default: 'root'
+  docker.group:
+    description: 'Group which will own the Docker services'
+    default: 'vcap'
+  docker.tcp_port:
+    description: 'TCP port where Docker daemon will listen to (if not set, TCP will not be available)'
+    default: '4243'
+  shipyard.host:
+    description: 'Address host of shipyard controller to attach to'
+  shipyard.port:
+    description: 'Address port of shipyard controller to attach to'
