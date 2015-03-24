@@ -107,12 +107,3 @@ properties:
     port: 8080
     host: 54.153.41.42
     scheme: http
-
-    host: 0.shipyard.default.<%= deployment_name %>.<%= tld %>
-    db:
-      host: 0.shipyard.default.<%= deployment_name %>.<%= tld %>
-    redis:
-      host: 0.shipyard.default.<%= deployment_name %>.<%= tld %>
-    lb:
-      routers:
-        - 0.shipyard.default.<%= deployment_name %>.<%= tld %>
