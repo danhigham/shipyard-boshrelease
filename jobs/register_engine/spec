@@ -6,8 +6,8 @@ packages:
   - docker
 
 templates:
-  bin/job_properties.sh.erb: bin/job_properties.sh
-  bin/register_engine.rb: bin/register_engine.rb
+  bin/register_engine_ctl.rb: bin/register_engine_ctl.rb
+  bin/register_engine.rb.erb: bin/register_engine.rb
 
 properties:
   docker.user:

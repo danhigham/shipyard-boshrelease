@@ -1,0 +1,161 @@
+require 'net/http'
+require 'json'
+
+@sy_scheme    = "<%= p('shipyard.scheme') %>"
+@sy_port      = "<%= p('shipyard.port') %>"
+@sy_host      = "<%= p('shipyard.host') %>"
+@docker_port  = "<%= p('docker.tcp_port') %>"
+
+@sy_controller = "#{@sy_scheme}://#{@sy_host}:#{@sy_port}"
+
+def log(text)
+  puts "#{Time.now.to_s} : #{text}"
+end
+
+def instance_id()
+  uri = URI("http://169.254.169.254/latest/meta-data/instance-id")
+  Net::HTTP.get_response(uri).body
+end
+
+def local_addr()
+  uri = URI("http://169.254.169.254/latest/meta-data/local-ipv4")
+  Net::HTTP.get_response(uri).body
+end
+
+def engines(svc_key)
+  res = get "#{@sy_controller}/api/engines", { "X-Service-Key" => svc_key }
+  return nil if res[:code].to_i > 200
+  return res[:body]
+end
+
+def login(username, password)
+
+  body = {
+    username: username,
+    password: password
+  }
+
+  res = post "#{@sy_controller}/auth/login", {}, body.to_json
+  return res[:body]["auth_token"]
+end
+
+def service_key(auth)
+  res = post "#{@sy_controller}/api/servicekeys", { "X-Access-Token" => "admin:#{auth}" }, {}.to_json
+  return res[:body]["key"]
+end
+
+def register(svc_key, id, host_address)
+
+  log "Registering engine @ #{host_address}"
+
+  payload = {
+    # id: id,
+    engine: {
+      id: id,
+      addr: host_address,
+      cpus: 4.0,
+      memory: 8192,
+      labels: ['local', 'dev']
+    }
+  }
+
+  log payload.to_json
+
+  res = post "#{@sy_controller}/api/engines",  { "X-Service-Key" => svc_key }, payload.to_json
+end
+
+def post(uri, headers, body)
+
+  req = Net::HTTP::Post.new(uri)
+  req.content_type = 'application/json'
+
+  headers.each { |k,v|
+    req[k] = v
+  }
+
+  req.body = body
+  uri = URI(uri)
+
+  res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => uri.scheme == 'https') { |http|
+    res = http.request(req)
+
+    return { code: res.code, body: nil } if res.code.to_i > 200
+
+    res_body = nil
+    res_body = JSON.parse(res.body) if !res.body.nil?
+
+    return { code: res.code, body: res_body }
+  }
+
+end
+
+def get(uri, headers)
+
+  req = Net::HTTP::Get.new(uri)
+  req.content_type = 'application/json'
+
+  headers.each { |k,v|
+    req[k] = v
+  }
+
+  uri = URI(uri)
+
+  begin
+    res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => uri.scheme == 'https', :open_timeout => 5) { |http|
+
+      res = http.request(req)
+
+      return { code: res.code, body: nil } if res.code.to_i > 200
+
+      res_body = nil
+      begin
+        res_body = JSON.parse(res.body) if !res.body.nil?
+      rescue JSON::ParserError
+        log "Response from #{uri.to_s} could not be parsed"
+      end
+
+      return { code: res.code, body: res_body }
+    }
+  rescue Timeout::Error
+    log "Timeout connecting to #{uri.hostname}"
+    return { code: 0, body: nil }
+  end
+
+end
+
+log "Checking controller service is online at #{@sy_controller}"
+
+unauthed_res = get("#{@sy_controller}/api/", {})[:code].to_i
+
+# while unauthed_res != 401
+#   begin
+#     unauthed_res = get("#{@sy_controller}/api/", {})[:code].to_i
+#   rescue Exception => e
+#     puts e.inspect
+#   end
+#   sleep 5
+# end
+
+engine_addr = "http://#{local_addr}:#{@docker_port}"
+aws_instance_id = instance_id
+
+log "Starting registration watch of #{engine_addr}"
+
+auth = login('admin', 'shipyard')
+log "Login auth key -> #{auth}"
+
+svc_key = service_key(auth)
+log "Service key -> #{svc_key}"
+
+loop do
+  engines = engines(svc_key)
+
+  this_engine = engines.select { |e| e["engine"]["addr"] == engine_addr }
+
+  if this_engine.length == 0
+    log "Engine not found!"
+    register svc_key, aws_instance_id, engine_addr
+  end
+
+  sleep 60
+end

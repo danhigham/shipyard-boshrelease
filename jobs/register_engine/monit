@@ -1,4 +1,5 @@
-check program register-engine with path "/var/vcap/bosh/bin/ruby /var/vcap/jobs/register_engine.rb"
+check process register_engine with pidfile /var/vcap/sys/run/register_engine/register_engine.rb.pid
   group vcap
-  if status != 0 then alert
+  start program "/var/vcap/packages/bosh-helpers/monit_debugger register_engine_ctl.rb '/var/vcap/jobs/register_engine/bin/register_engine_ctl.rb start'"
+  stop program "/var/vcap/packages/bosh-helpers/monit_debugger register_engine_ctl.rb '/var/vcap/jobs/register_engine/bin/register_engine_ctl.rb stop'"
   depends on docker
