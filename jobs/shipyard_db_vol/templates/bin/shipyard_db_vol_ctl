@@ -46,7 +46,7 @@ case $1 in
 
     # Grab Shipyard DB Container process pid
     container_id=$(cat ${SHIPYARD_DB_VOL_ID_FILE})
-    pid_process=$(chpst -u ${DOCKER_USER}:${DOCKER_GROUP} docker -H unix:///var/vcap/sys/run/docker/docker.sock inspect $container_id | grep Pid | awk '{ gsub(",", ""); print $2 }')
+    pid_process=$(chpst -u ${DOCKER_USER}:${DOCKER_GROUP} docker -H unix:///var/vcap/sys/run/docker/docker.sock inspect $container_id | grep 'Pid\"' | awk '{ gsub(",", ""); print $2 }')
     echo ${pid_process} > ${SHIPYARD_DB_VOL_PID_FILE}
     ;;
 
