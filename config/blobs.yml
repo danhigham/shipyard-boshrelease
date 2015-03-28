@@ -1,16 +1,9 @@
 ---
 docker/aufs-tools_20120411-3_amd64.deb:
   object_id: 5c97ebec-17b5-4ead-add9-39e6343f77c5
-  sha: !binary |-
-    MmRmYzFmZTM4NmNkM2YwNWFjN2UwYjRlYmNmM2ViYzhhN2YzYjA0ZA==
+  sha: 2dfc1fe386cd3f05ac7e0b4ebcf3ebc8a7f3b04d
   size: 91762
-# docker/docker-0.10.0:
-#   object_id: 7253d556-558d-4b10-aa9a-8cb866f709df
-#   sha: !binary |-
-#     MzgyZjIwNWJjZmM1ODYzNzlhZjk1ZGM5N2Q0OWIzODVjY2E1ODUxZA==
-#   size: 16970072
-docker/docker-0.11.0:
-  object_id: 2c6d619a-3dde-4f7e-b861-9e1c2d7e2ed1
-  sha: !binary |-
-    YTAwNDMwMzhlODZjZjMxNjBhODIyM2EwYWQzMGZiYTg5NmU0MDg2Yw==
-  size: 17239732
+docker/docker-1.5:
+  object_id: 3b9d3998-d12a-488a-bf8d-dedf4526ea6e
+  sha: eb93ea4baf7acf1fd5e21d9d814b07eea5c0a264
+  size: 15005140
